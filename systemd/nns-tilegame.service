@@ -1,0 +1,17 @@
+[Unit]
+Description=NNS Discord Tile Game
+Wants=network-online.target nns-tipbot.service
+After=network-online.target nns-tipbot.service
+
+[Service]
+Type=simple
+User=nns-tipbot
+Group=nns-tipbot
+WorkingDirectory=/opt/nns-tipbot
+ExecStart=/opt/nns-tipbot/.venv/bin/python -u /opt/nns-tipbot/nns_tilegame.py
+Restart=on-failure
+RestartSec=10
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

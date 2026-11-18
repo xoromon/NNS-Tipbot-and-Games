@@ -1,0 +1,5 @@
+# Merge into the nns-tipbot user crontab; not an /etc/cron.d file.
+SHELL=/bin/sh
+PATH=/usr/local/bin:/usr/bin:/bin
+
+7,37 * * * * /usr/bin/flock -n /opt/nns-tipbot/update_nns_apr_cache.lock -c 'cd /opt/nns-tipbot && /usr/bin/timeout 120 /opt/nns-tipbot/.venv/bin/python /opt/nns-tipbot/update_nns_apr_cache.py >> /opt/nns-tipbot/nns_apr_cache.log 2>&1'

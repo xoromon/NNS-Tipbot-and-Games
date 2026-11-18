@@ -1,0 +1,27 @@
+[Unit]
+Description=Conservatively consolidate 996-Coin staking UTXOs
+Requires=996coind.service
+After=996coind.service
+ConditionPathExists=/opt/nns-tipbot/consolidate_996_utxos.py
+
+[Service]
+Type=oneshot
+User=nns-tipbot
+Group=nns-tipbot
+WorkingDirectory=/opt/nns-tipbot/node/consolidator
+
+# Exactly one transaction per invocation. The script advances only after the
+# previous TX has at least six confirmations. Broadcast ambiguity is never retried.
+ExecStart=/opt/nns-tipbot/consolidate_996_utxos.py --cli /opt/nns-tipbot/node/bin/coin996-cli --datadir /opt/nns-tipbot/node/data --state-file /opt/nns-tipbot/node/consolidator/state.json --min-inputs 100 --max-inputs 100 --target-amount 100000000 --max-utxo 110 --auto-tiers 110,1000,11000 --highest-tier-max-total 150000 --min-conf 100 --fee 0.01 --rpc-timeout 20 --scan-timeout 120 --scan-count 300 --required-confirmations 6 --auto-advance --sleep 0 --tipbot-db /opt/nns-tipbot/tipbot.db --destination REPLACE_WITH_NEW_UNASSIGNED_WALLET_ADDRESS --broadcast
+
+TimeoutStartSec=5min
+KillMode=control-group
+Nice=10
+IOSchedulingClass=idle
+UMask=0077
+
+# A failed/ambiguous run must require inspection; systemd must not retry it.
+Restart=no
+
+[Install]
+WantedBy=multi-user.target

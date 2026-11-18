@@ -1,0 +1,32 @@
+[Unit]
+Description=996-Coin Core daemon (foreground, systemd supervised)
+Documentation=man:systemd.service(5)
+Wants=network-online.target
+After=network-online.target
+StartLimitIntervalSec=15min
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=nns-tipbot
+Group=nns-tipbot
+WorkingDirectory=/opt/nns-tipbot
+
+# Keep the real node in the foreground. systemd tracks the actual process.
+ExecStart=/opt/nns-tipbot/node/bin/coin996d -daemon=0 -datadir=/opt/nns-tipbot/node/data -wallet=discord
+
+# Request clean shutdown with SIGTERM; escalate after TimeoutStopSec.
+KillSignal=SIGTERM
+KillMode=mixed
+TimeoutStopSec=300s
+SendSIGKILL=yes
+FinalKillSignal=SIGKILL
+
+Restart=on-failure
+RestartSec=30s
+LimitNOFILE=65535
+UMask=0077
+TimeoutStartSec=120s
+
+[Install]
+WantedBy=multi-user.target

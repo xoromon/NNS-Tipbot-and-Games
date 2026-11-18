@@ -1,0 +1,14 @@
+# Replace every REPLACE_* value before starting the node.
+server=1
+daemon=0
+listen=1
+# Same-host RPC: keep loopback binding.
+rpcbind=127.0.0.1
+rpcallowip=127.0.0.1
+# For a separate trusted LAN client, add its actual IP (example only):
+# rpcallowip=192.168.1.50
+rpcport=REPLACE_WITH_RPC_PORT
+rpcuser=REPLACE_WITH_RPC_USER
+rpcpassword=REPLACE_WITH_STRONG_RPC_PASSWORD
+staking=1
+txindex=1
